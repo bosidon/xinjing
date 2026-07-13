@@ -7,8 +7,8 @@
     <meta http-equiv="Pragma" content="no-cache">
     <meta http-equiv="Expires" content="0">
     <title>心镜·心理测评 - 专业的在线心理测评平台</title>
-    <link rel="stylesheet" href="css/style.css?v=341">
-    <link rel="stylesheet" href="css/responsive.css?v=341">
+    <link rel="stylesheet" href="css/style.css?v=357">
+    <link rel="stylesheet" href="css/responsive.css?v=357">
     <link rel="stylesheet" href="/assets/xianbao/fontawesome/css/all.min.css">
     <style>
         @font-face {
@@ -66,7 +66,7 @@
         .hero .container {
             display: flex;
             align-items: center;
-            justify-content: flex-start;
+            justify-content: center;
             padding-left: 60px;
             text-align: left;
             height: 100%;
@@ -124,7 +124,7 @@
             gap: 2rem;
             margin-top: 1.8rem;
             padding-top: 1.5rem;
-            border-top: 1px solid rgba(148, 163, 184, 0.1);
+
         }
         .hero-stats .stat-item {
             display: flex;
@@ -206,8 +206,7 @@
             height: 48px;
             display: flex;
             align-items: center;
-            justify-content: flex-start;
-            padding-left: 60px;
+            justify-content: center;
             border-radius: 16px;
             background: rgba(34, 211, 238, 0.08);
         }
@@ -287,8 +286,7 @@
             height: 44px;
             display: flex;
             align-items: center;
-            justify-content: flex-start;
-            padding-left: 60px;
+            justify-content: center;
             border-radius: 14px;
             background: rgba(34, 211, 238, 0.08);
             flex-shrink: 0;
@@ -326,8 +324,12 @@
         }
 
         /* ===== 响应式 ===== */
+            .hero-section { height: 480px; }
         @media (max-width: 768px) {
-            .hero-actions { justify-content: center; }
+            .hero-content { width: 60%; }
+            .hero .container { justify-content: flex-start; }
+            .hero { height: 400px; }
+            .hero-actions { justify-content: flex-start; }
             .hero-subtitle { max-width: 100%; }
             .hero-title { font-size: 1.8rem; }
             .hero-stats { justify-content: center; }
@@ -377,18 +379,15 @@
     <main>
 
         <!-- 首页 Hero -->
-        <section class="hero" style="height:600px;padding:0;">
+        <section class="hero hero-section">
             <div class="container">
                 <div class="hero-content">
-                    <span class="hero-badge"><i class="fas fa-heart"></i> 科学 · 精准 · 隐私</span>
+                    <span class="hero-badge"><i class="fas fa-heart"></i> 科学 · 精准 · 保护隐私</span>
                     <h1 class="hero-title">探索内心世界<br><span class="gradient-text">从一份测评开始</span></h1>
                     <p class="hero-subtitle">专业的在线心理测评平台，提供科学、准确的心理评估工具</p>
                     <div class="hero-actions">
                         <a href="assessments.html" class="btn btn-primary btn-lg" style="text-decoration:none;display:inline-flex;align-items:center;gap:8px;">
                             <i class="fas fa-play-circle"></i> 开始测评
-                        </a>
-                        <a href="#hot" class="btn btn-outline btn-lg" style="text-decoration:none;display:inline-flex;align-items:center;gap:8px;">
-                            <i class="fas fa-info-circle"></i> 了解更多
                         </a>
                     </div>
                     <div class="hero-stats">
@@ -399,7 +398,6 @@
                 </div>
             </div>
         </section>
-        <a id="hot" style="display:block;scroll-margin-top:80px;"></a>
 
 
         <!-- 热门测评 -->

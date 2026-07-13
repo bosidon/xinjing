@@ -192,7 +192,7 @@ body::before {
   max-width: 100%;
 }
 
-.hero-actions { display: flex; gap: 1rem; flex-wrap: wrap; justify-content: center; }
+.hero-actions { display: flex; gap: 1rem; flex-wrap: wrap; justify-content: flex-start; }
 
 .hero-image {
   display: flex;
@@ -962,8 +962,6 @@ body::before {
 .footer {
   background: var(--bg-secondary);
   border-top: 1px solid var(--border-color);
-  padding: 3rem 0 1.5rem;
-  margin-top: 3rem;
 }
 
 .footer-content {
