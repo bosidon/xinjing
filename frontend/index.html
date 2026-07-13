@@ -7,8 +7,8 @@
     <meta http-equiv="Pragma" content="no-cache">
     <meta http-equiv="Expires" content="0">
     <title>心镜·心理测评 - 专业的在线心理测评平台</title>
-    <link rel="stylesheet" href="css/style.css">
-    <link rel="stylesheet" href="css/responsive.css">
+    <link rel="stylesheet" href="css/style.css?v=340">
+    <link rel="stylesheet" href="css/responsive.css?v=340">
     <link rel="stylesheet" href="/assets/xianbao/fontawesome/css/all.min.css">
     <style>
         @font-face {
@@ -26,7 +26,7 @@
             align-items: center;
             justify-content: space-between;
             border-bottom: 1px solid rgba(148, 163, 184, 0.06);
-            margin-bottom: 2rem;
+            margin-bottom: 0;
         }
 
         .ceping-header .ch-logo {
@@ -64,11 +64,14 @@
 
         /* ===== Hero ===== */
         .hero .container {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 3rem;
+            display: flex;
             align-items: center;
+            justify-content: center;
             text-align: left;
+            height: 100%;
+            position: relative;
+            background: url(../images/hero-bg.png) center/cover no-repeat;
+            
         }
 
         .hero-badge {
@@ -137,69 +140,6 @@
             letter-spacing: 0.3px;
         }
 
-        .hero-image {
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            min-height: 280px;
-        }
-
-        .hero-graphic { position: relative; width: 240px; height: 240px; }
-        .hero-graphic-inner {
-            position: relative;
-            width: 100%;
-            height: 100%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-        }
-        .hero-graphic-inner .fa-brain {
-            font-size: 4.5rem;
-            color: #22d3ee;
-            filter: drop-shadow(0 0 30px rgba(34, 211, 238, 0.5));
-            animation: floatBrain 4s ease-in-out infinite;
-            z-index: 2;
-        }
-        .hero-graphic .orbit {
-            position: absolute;
-            inset: 0;
-            animation: spinOrbit 12s linear infinite;
-        }
-        .hero-graphic .orbit span {
-            position: absolute;
-            top: 50%;
-            left: 50%;
-            width: 36px;
-            height: 36px;
-            background: rgba(17, 24, 39, 0.8);
-            border: 1px solid rgba(148, 163, 184, 0.15);
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 0.88rem;
-            color: #22d3ee;
-            transform: translate(-50%, -50%) rotate(var(--angle)) translateX(100px) rotate(calc(-1 * var(--angle)));
-            box-shadow: 0 0 16px rgba(34, 211, 238, 0.08);
-            animation: orbitPulse 3s ease-in-out infinite;
-            animation-delay: calc(var(--angle) / 360deg * 3s);
-        }
-        .hero-graphic-glow {
-            position: absolute;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            width: 180px;
-            height: 180px;
-            background: radial-gradient(circle, rgba(34, 211, 238, 0.12) 0%, transparent 70%);
-            border-radius: 50%;
-            filter: blur(40px);
-            pointer-events: none;
-        }
-
-        @keyframes spinOrbit { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
-        @keyframes floatBrain { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-12px); } }
-        @keyframes orbitPulse { 0%, 100% { opacity: 0.6; } 50% { opacity: 1; } }
 
         /* ===== 热门测评 ===== */
         .hot-section { padding: 0 0 3rem; }
@@ -384,25 +324,27 @@
 
         /* ===== 响应式 ===== */
         @media (max-width: 768px) {
-            .hero .container { grid-template-columns: 1fr; text-align: center; gap: 2rem; }
             .hero-actions { justify-content: center; }
             .hero-subtitle { max-width: 100%; }
             .hero-title { font-size: 1.8rem; }
             .hero-stats { justify-content: center; }
-            .hero-image { padding: 1.5rem; min-height: 200px; }
             .hot-grid { grid-template-columns: repeat(auto-fit, minmax(160px, 1fr)); }
             .featured-section { flex-direction: column; align-items: flex-start; }
             .ceping-header { flex-direction: column; gap: 0.8rem; padding: 1rem; }
             .ceping-header .ch-nav { gap: 1rem; flex-wrap: wrap; justify-content: center; }
-            .hero-graphic { width: 180px; height: 180px; }
-            .hero-graphic-inner .fa-brain { font-size: 3.5rem; }
-            .hero-graphic .orbit span { width: 28px; height: 28px; font-size: 0.78rem; transform: translate(-50%, -50%) rotate(var(--angle)) translateX(70px) rotate(calc(-1 * var(--angle))); }
         }
-
         @media (max-width: 480px) {
             .hero-title { font-size: 1.5rem; }
             .hero-stats { gap: 1.2rem; flex-wrap: wrap; }
             .hero-stats .number { font-size: 1.2rem; }
+        }
+
+        .hero .container::after {
+            content: "";
+            position: absolute;
+            inset: 0;
+            pointer-events: none;
+            background: linear-gradient(to right, #010101, transparent 30%, transparent 82%, #010101), linear-gradient(to bottom, #010101, transparent 25%, transparent 85%, #010101);
         }
     </style>
 <link rel=icon type=image/x-icon href=/assets/xianbao/favicon.ico>
@@ -432,7 +374,7 @@
     <main>
 
         <!-- 首页 Hero -->
-        <section class="hero" style="border:none;">
+        <section class="hero" style="height:600px;padding:0;">
             <div class="container">
                 <div class="hero-content">
                     <span class="hero-badge"><i class="fas fa-heart"></i> 科学 · 精准 · 隐私</span>
@@ -452,25 +394,10 @@
                         <div class="stat-item"><span class="number">4.9</span><span class="label">用户评分</span></div>
                     </div>
                 </div>
-                <div class="hero-image">
-                    <div class="hero-graphic">
-                        <div class="hero-graphic-inner">
-                            <i class="fas fa-brain"></i>
-                            <div class="orbit">
-                                <span style="--angle:0deg;--color:#22d3ee"><i class="fas fa-heart-pulse"></i></span>
-                                <span style="--angle:72deg;--color:#3b82f6"><i class="fas fa-user-check"></i></span>
-                                <span style="--angle:144deg;--color:#a855f7"><i class="fas fa-chart-line"></i></span>
-                                <span style="--angle:216deg;--color:#34d399"><i class="fas fa-shield-halved"></i></span>
-                                <span style="--angle:288deg;--color:#ec4899"><i class="fas fa-compass"></i></span>
-                            </div>
-                        </div>
-                        <div class="hero-graphic-glow"></div>
-                    </div>
-                </div>
             </div>
         </section>
-
         <a id="hot" style="display:block;scroll-margin-top:80px;"></a>
+
 
         <!-- 热门测评 -->
         <div class="hot-section">

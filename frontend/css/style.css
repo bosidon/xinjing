@@ -4,7 +4,7 @@
 
 :root {
   /* 暗色基底 */
-  --bg-primary: #0a0e1a;
+  --bg-primary: #010101;
   --bg-secondary: #111827;
   --bg-card: rgba(17, 24, 39, 0.75);
   --bg-card-hover: rgba(30, 41, 59, 0.85);
@@ -162,7 +162,7 @@ body::before {
 
 /* ============ 首页 Hero ============ */
 .hero {
-  padding: 3rem 0 2rem;
+  padding: 0;
   position: relative;
 }
 
@@ -476,9 +476,56 @@ body::before {
   color: var(--text-secondary);
 }
 
-.assessment-actions { display: flex; justify-content: center; gap: 1rem; margin-top: 2rem; }
+.assessment-actions { text-align: center; margin-top: 2rem; }
 
 /* ============ 测试页面 ============ */
+.test-header {
+  background: var(--bg-card);
+  backdrop-filter: blur(12px);
+  border: 1px solid var(--border-color);
+  border-radius: var(--radius-md);
+  padding: 1.25rem 1.5rem;
+  margin-bottom: 1.5rem;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 1.5rem;
+}
+
+.test-progress { flex: 1; }
+
+.progress-bar {
+  height: 6px;
+  background: rgba(255,255,255,0.08);
+  border-radius: 3px;
+  overflow: hidden;
+  margin-bottom: 0.4rem;
+}
+
+.progress-fill {
+  height: 100%;
+  background: linear-gradient(90deg, var(--accent-cyan), var(--accent-blue), var(--accent-purple));
+  width: 0%;
+  transition: width 0.4s ease;
+  border-radius: 3px;
+  box-shadow: 0 0 10px rgba(34,211,238,0.3);
+}
+
+.progress-text {
+  font-size: 0.88rem;
+  color: var(--text-secondary);
+}
+
+.test-timer {
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+  font-size: 1rem;
+  font-weight: 600;
+  color: var(--accent-cyan);
+  font-variant-numeric: tabular-nums;
+}
+
 .question-card {
   background: var(--bg-card);
   border: 1px solid var(--border-color);
@@ -580,6 +627,17 @@ body::before {
   padding: 1rem 0;
   gap: 0.5rem;
   flex-wrap: wrap;
+}
+
+.missing-hint {
+  width: 100%;
+  text-align: center;
+  color: #f39c12;
+  font-size: 0.9rem;
+  padding: 0.5rem;
+  background: rgba(243, 156, 18, 0.1);
+  border-radius: 8px;
+  border: 1px solid rgba(243, 156, 18, 0.3);
 }
 
 /* ============ 结果页面 ============ */
@@ -1244,14 +1302,4 @@ body::before {
   .layout-list .assessment-card-header { width: 100%; margin-bottom: 0.25rem; }
   .layout-list .assessment-card-body p { white-space: normal; }
   .layout-list .assessment-card-footer { width: 100%; margin-top: 0.5rem; text-align: right; }
-}
-
-
-#testAssessmentName {
-  font-size: 1rem !important;
-  color: #22d3ee !important;
-  text-align: center !important;
-  margin-bottom: 1rem;
-  font-weight: 600 !important;
-  letter-spacing: 0.5px;
 }

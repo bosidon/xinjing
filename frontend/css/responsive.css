@@ -5,12 +5,11 @@
 /* ========== 桌面端：导航展开 ========== */
 @media (min-width: 769px) {
   .hero .container {
-    grid-template-columns: 1fr 1fr;
-    text-align: left;
+    grid-template-columns: 1fr;
+    text-align: center;
   }
-  .hero-actions { justify-content: flex-start; }
+  .hero-actions { justify-content: center; }
   .hero-title { font-size: 2rem; font-family: 'Songti SC','Noto Serif SC','STSong','SimSun',serif; font-family: 'Songti SC','Noto Serif SC','STSong','SimSun',serif; }
-  .hero-graphic { width: 200px; height: 200px; }
   .assessment-header .assessment-meta { gap: 1.5rem; }
 }
 
