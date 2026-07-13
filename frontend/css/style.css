@@ -4,7 +4,7 @@
 
 :root {
   /* 暗色基底 */
-  --bg-primary: #0a0e1a;
+  --bg-primary: #010101;
   --bg-secondary: #111827;
   --bg-card: rgba(17, 24, 39, 0.75);
   --bg-card-hover: rgba(30, 41, 59, 0.85);
