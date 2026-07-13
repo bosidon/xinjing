@@ -1,0 +1,19 @@
+/* ========== 心镜·心理测评 - 移动端适配 ==========
+   默认样式已是移动端优先，这里添加桌面端覆盖 + 小屏优化
+   ================================================ */
+
+/* ========== 桌面端：导航展开 ========== */
+@media (min-width: 769px) {
+  .hero .container {
+    grid-template-columns: 1fr 1fr;
+    text-align: left;
+  }
+  .hero-actions { justify-content: flex-start; }
+  .hero-title { font-size: 2rem; font-family: 'Songti SC','Noto Serif SC','STSong','SimSun',serif; font-family: 'Songti SC','Noto Serif SC','STSong','SimSun',serif; }
+  .hero-graphic { width: 200px; height: 200px; }
+  .assessment-header .assessment-meta { gap: 1.5rem; }
+}
+
+/* ========== 平板 ========== */
+@media (max-width: 768px) {
+

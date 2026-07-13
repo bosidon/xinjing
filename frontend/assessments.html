@@ -1,0 +1,575 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
+    <meta http-equiv="Pragma" content="no-cache">
+    <meta http-equiv="Expires" content="0">
+    <title>测评库 - 心镜·心理测评</title>
+    <link rel="stylesheet" href="css/style.css?v=3">
+    <link rel="stylesheet" href="css/responsive.css">
+    <link rel="stylesheet" href="/assets/xianbao/fontawesome/css/all.min.css">
+    <style>
+        @font-face {
+            font-family: 'Noto Serif SC';
+            src: url('/assets/xianbao/NotoSerifSC-SemiBold.subset.woff2') format('woff2');
+            font-weight: 600;
+            font-display: swap;
+        }
+        body{padding-top:60px;}
+
+        .ceping-header {
+            padding: 0.75rem 0;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            border-bottom: 1px solid rgba(148, 163, 184, 0.06);
+            margin-bottom: 2rem;
+        }
+        .ceping-header .ch-logo {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-weight: 700;
+            font-size: 1.2rem;
+            font-family: 'Songti SC', 'Noto Serif SC', 'STSong', 'SimSun', serif;
+            color: #f0f4ff;
+        }
+        .ceping-header .ch-logo i {
+            font-size: 1.6rem;
+            color: #22d3ee;
+            filter: drop-shadow(0 0 12px rgba(34, 211, 238, 0.3));
+        }
+        .ceping-header .ch-nav {
+            display: flex;
+            gap: 1.8rem;
+            align-items: center;
+            font-weight: 500;
+            font-size: 0.88rem;
+        }
+        .ceping-header .ch-nav a {
+            text-decoration: none;
+            color: #94a3b8;
+            transition: color 0.2s;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+        .ceping-header .ch-nav a:hover { color: #22d3ee; }
+        .ceping-header .ch-nav a.active { color: #22d3ee; }
+
+        /* ===== 测评列表 ===== */
+        .assessment-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+            gap: 1.5rem;
+            margin-top: 1.5rem;
+        }
+        .assessment-card {
+            background: rgba(17,24,39,0.6);
+            backdrop-filter: blur(8px);
+            border-radius: 20px;
+            padding: 1.5rem;
+            border: 1px solid rgba(148,163,184,0.08);
+            transition: all 0.25s ease;
+            cursor: pointer;
+            display: flex;
+            flex-direction: column;
+        }
+        .assessment-card:hover {
+            transform: translateY(-4px);
+            border-color: rgba(34,211,238,0.2);
+            box-shadow: 0 8px 32px rgba(59,130,246,0.12);
+            background: rgba(17,24,39,0.8);
+        }
+        .assessment-card .card-category {
+            font-size: 0.78rem;
+            font-weight: 600;
+            color: #22d3ee;
+            background: rgba(34,211,238,0.08);
+            padding: 0.15rem 0.7rem;
+            border-radius: 20px;
+            align-self: flex-start;
+            margin-bottom: 0.8rem;
+        }
+        .assessment-card h3 {
+            font-weight: 700;
+            font-size: 1rem;
+            margin-bottom: 0.4rem;
+            color: #f0f4ff;
+            font-family: 'Songti SC', 'Noto Serif SC', 'STSong', 'SimSun', serif;
+        }
+        .assessment-card p {
+            font-size: 0.82rem;
+            line-height: 1.5;
+            color: #94a3b8;
+            margin-bottom: 1rem;
+            flex: 1;
+            display: -webkit-box;
+            -webkit-line-clamp: 3;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+        }
+        .assessment-card .card-meta {
+            display: flex;
+            gap: 1rem;
+            font-size: 0.78rem;
+            color: #64748b;
+        }
+        .assessment-card .card-meta i { margin-right: 4px; color: #22d3ee; }
+
+        /* ===== 测评详情 ===== */
+        .assessment-detail { display: none; }
+        .assessment-header { margin: 2rem 0 1.5rem; }
+        .assessment-header h2 {
+            font-size: 1.6rem;
+            font-weight: 700;
+            font-family: 'Songti SC', 'Noto Serif SC', 'STSong', 'SimSun', serif;
+            color: #f0f4ff;
+            margin-bottom: 1rem;
+        }
+        .assessment-meta { display: flex; gap: 1.5rem; flex-wrap: wrap; }
+        .assessment-meta .meta-item {
+            color: #94a3b8;
+            font-size: 0.88rem;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+        .assessment-meta .meta-item i { color: #22d3ee; }
+        .assessment-description {
+            background: rgba(17,24,39,0.4);
+            border-radius: 16px;
+            padding: 1.5rem;
+            margin: 1.5rem 0;
+            border: 1px solid rgba(148,163,184,0.06);
+            line-height: 1.8;
+            color: #cbd5e1;
+        }
+
+        /* ===== 测试页面 ===== */
+        .test-page { display: none; }
+        .question-card {
+            background: rgba(17,24,39,0.6);
+            backdrop-filter: blur(8px);
+            border-radius: 20px;
+            padding: 2rem;
+            border: 1px solid rgba(148,163,184,0.08);
+            margin-bottom: 1.5rem;
+        }
+        .question-card h3 {
+            font-size: 1.1rem;
+            font-weight: 600;
+            color: #f0f4ff;
+            margin-bottom: 1.5rem;
+            line-height: 1.6;
+        }
+        .question-options { display: flex; flex-direction: column; gap: 0.8rem; }
+        .question-options label {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 0.9rem 1.2rem;
+            background: rgba(148,163,184,0.04);
+            border: 1px solid rgba(148,163,184,0.08);
+            border-radius: 12px;
+            cursor: pointer;
+            transition: all 0.2s;
+            font-size: 0.95rem;
+            color: #cbd5e1;
+        }
+        .question-options label:hover {
+            background: rgba(34,211,238,0.06);
+            border-color: rgba(34,211,238,0.2);
+        }
+        .question-options input[type="radio"]:checked + span,
+        .question-options input[type="radio"]:checked ~ span { color: #22d3ee; }
+        .question-options input[type="radio"]:checked ~ { border-color: rgba(34,211,238,0.3); }
+        .missing-questions { display: flex; flex-wrap: wrap; gap: 0.4rem; justify-content: center; align-items: center; }
+        .missing-questions .mq-label { font-size: 0.82rem; color: #ef4444; margin-right: 0.25rem; }
+        .missing-questions .mq-chip {
+            display: inline-block; padding: 0.2rem 0.55rem;
+            background: rgba(239,68,68,0.1); border: 1px solid rgba(239,68,68,0.2);
+            border-radius: 14px; font-size: 0.8rem; color: #f87171;
+            cursor: pointer; transition: all 0.15s;
+        }
+        .missing-questions .mq-chip:hover { background: rgba(239,68,68,0.2); border-color: rgba(239,68,68,0.4); }
+        .test-navigation {
+            display: flex;
+            justify-content: center;
+            gap: 0.5rem;
+            align-items: center;
+            flex-wrap: wrap;
+        }
+        @keyframes submitPulse {
+            0%, 100% { box-shadow: 0 0 0 0 rgba(34,197,94,0.4); }
+            50% { box-shadow: 0 0 0 8px rgba(34,197,94,0); }
+        }
+        .btn-success.submit-ready {
+            animation: submitPulse 2s ease-in-out infinite;
+        }
+
+        /* ===== 结果页面 ===== */
+        .result-page { display: none; }
+        .result-header { margin-bottom: 2rem; }
+        .result-header h2 {
+            font-size: 1.6rem;
+            font-weight: 700;
+            font-family: 'Songti SC', 'Noto Serif SC', 'STSong', 'SimSun', serif;
+            color: #f0f4ff;
+        }
+        .score-display {
+            display: flex;
+            gap: 2rem;
+            align-items: center;
+            flex-wrap: wrap;
+        }
+        .score-circle {
+            width: 100px;
+            height: 100px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, rgba(34,211,238,0.15), rgba(168,85,247,0.15));
+            border: 3px solid rgba(34,211,238,0.3);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+        }
+        .score-circle span { font-size: 2rem; font-weight: 700; color: #22d3ee; }
+        .score-circle small { font-size: 0.78rem; color: #64748b; }
+        .result-actions {
+            display: flex;
+            gap: 1rem;
+            margin-top: 2rem;
+            flex-wrap: wrap;
+        }
+
+        /* ===== 加载状态 ===== */
+        .loading {
+            text-align: center;
+            padding: 3rem;
+            color: #94a3b8;
+        }
+        .loading i { font-size: 2rem; color: #22d3ee; margin-bottom: 1rem; }
+
+        /* ===== 页脚 ===== */
+        .footer { margin-top: 3rem; }
+
+
+        /* === 列表视图覆盖 === */
+        .layout-list .category-section { margin: 0 !important; }
+        .layout-list .category-section { margin-bottom: 1rem; }
+        .layout-list .category-header {
+            display: flex !important; align-items: center; gap: 6px;
+            padding: 0.35rem 0; margin-bottom: 0;
+            color: #64748b; font-size: 0.88rem;
+        }
+        .layout-list .category-header i { font-size: 0.78rem; color: #22d3ee; }
+        .layout-list .category-header h2 {
+            font-size: 0.88rem; font-weight: 600; color: #94a3b8;
+            margin: 0; font-family: inherit;
+        }
+        .layout-list .category-header .category-count { display: none; }
+        .layout-list .category-grid { display: block !important; }
+        .layout-list .assessment-grid { display: block !important; }
+        .layout-list .assessment-card {
+            display: flex !important; align-items: center;
+            flex-direction: row !important;
+            padding: 0.6rem 0.75rem !important;
+            margin: 0 !important;
+            border-bottom: 1px solid rgba(148,163,184,0.04) !important;
+            border-radius: 0 !important;
+            background: transparent !important;
+            cursor: pointer !important;
+            transition: background 0.15s;
+        }
+        .layout-list .assessment-card:nth-child(even) {
+            background: rgba(148,163,184,0.02) !important;
+        }
+        .layout-list .assessment-card:hover {
+            background: rgba(34,211,238,0.05) !important;
+            transform: none !important;
+            border-color: transparent !important;
+            box-shadow: none !important;
+        }
+        .layout-list .assessment-card-header {
+            flex: 0 0 170px; padding: 0 !important;
+            background: none !important;
+        }
+        .layout-list .assessment-card-header h3 {
+            font-size: 0.95rem; margin: 0; font-weight: 600;
+        }
+        .layout-list .assessment-card-body {
+            flex: 1; padding: 0 !important; margin: 0 1rem;
+        }
+        .layout-list .assessment-card-body p {
+            font-size: 0.88rem; margin: 0; color: #94a3b8;
+            line-height: 1.4;
+            display: -webkit-box;
+            -webkit-line-clamp: 2;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+        }
+        .layout-list .assessment-card-footer {
+            flex: 0 0 auto; display: flex; align-items: center;
+            gap: 1rem; padding: 0 !important;
+        }
+        .layout-list .assessment-meta {
+            font-size: 0.88rem; color: #64748b; display: flex; gap: 0.75rem;
+        }
+        .layout-list .assessment-meta .meta-item { font-size: 0.88rem; }
+        .layout-list .assessment-card .btn {
+            flex-shrink: 0; padding: 0.25rem 0.75rem; font-size: 0.88rem;
+        }
+
+        /* === 移动端答题选项 === */
+        @media (max-width: 480px) {
+            .question-card { padding: 1rem !important; }
+            .option-item { padding: 0.65rem 0.8rem !important; gap: 0.5rem !important; }
+            .option-text { font-size: 0.88rem !important; }
+        }
+
+        @media (max-width: 768px) {
+            .ceping-header { flex-direction: column; gap: 0.8rem; padding: 1rem; }
+            .ceping-header .ch-nav { gap: 1rem; flex-wrap: wrap; justify-content: center; }
+            .assessment-grid { grid-template-columns: 1fr; }
+            .score-display { flex-direction: column; align-items: flex-start; }
+        }
+
+        /* === 移动端双列卡片 === */
+        @media (max-width: 640px) {
+            .layout-list .category-grid {
+                display: grid !important;
+                grid-template-columns: 1fr 1fr;
+                gap: 0.75rem;
+            }
+            .layout-list .assessment-card {
+                flex-direction: column !important;
+                padding: 1rem !important;
+                border: 1px solid rgba(148,163,184,0.08) !important;
+                border-radius: 16px !important;
+                background: rgba(17,24,39,0.6) !important;
+                backdrop-filter: blur(8px);
+                -webkit-backdrop-filter: blur(8px);
+                margin-bottom: 0 !important;
+                transition: all 0.25s ease !important;
+            }
+            .layout-list .assessment-card:active {
+                transform: translateY(-2px);
+                border-color: rgba(34,211,238,0.2) !important;
+                box-shadow: 0 6px 24px rgba(59,130,246,0.12);
+            }
+            .layout-list .assessment-card:nth-child(even) {
+                background: rgba(17,24,39,0.6) !important;
+            }
+            .layout-list .assessment-card-header {
+                flex: none !important;
+                padding: 0 0 0.5rem 0 !important;
+            }
+            .layout-list .assessment-card-header h3 {
+                font-size: 1rem; font-weight: 700;
+                font-family: 'Songti SC','Noto Serif SC','STSong','SimSun',serif;
+            }
+            .layout-list .assessment-card-body {
+                flex: 1 !important; margin: 0 0 0.75rem 0 !important;
+                padding: 0 !important;
+            }
+            .layout-list .assessment-card-body p {
+                font-size: 0.82rem; line-height: 1.5; color: #94a3b8;
+                -webkit-line-clamp: 2;
+            }
+            .layout-list .assessment-card-footer {
+                flex: none !important;
+                flex-direction: row; justify-content: space-between;
+                width: 100%; align-items: center;
+            }
+            .layout-list .assessment-meta {
+                font-size: 0.78rem; gap: 0.4rem;
+                font-weight: 600; color: #22d3ee;
+                background: rgba(34,211,238,0.08);
+                padding: 0.15rem 0.55rem;
+                border-radius: 20px;
+                border: 1px solid rgba(34,211,238,0.1);
+            }
+            .layout-list .assessment-meta .meta-item { font-size: 0.78rem; }
+            .layout-list .assessment-meta .meta-item i { display: none; }
+            .layout-list .assessment-card .btn {
+                padding: 0.25rem 0.6rem; font-size: 0.8rem;
+                border-radius: 20px;
+            }
+        }
+        #testAssessmentName {
+            font-size: 1rem !important;
+            color: #22d3ee !important;
+            text-align: center !important;
+            margin-bottom: 1rem;
+            font-weight: 600 !important;
+            letter-spacing: 0.5px;
+        }
+    </style>
+<link rel=icon type=image/x-icon href=/assets/xianbao/favicon.ico>
+<link rel=icon type=image/png sizes=16x16 href=/assets/xianbao/favicon-16.png>
+<link rel=icon type=image/png sizes=32x32 href=/assets/xianbao/favicon-32.png>
+<link rel=icon type=image/png sizes=192x192 href=/assets/xianbao/favicon-256.png>
+<link rel=apple-touch-icon sizes=180x180 href=/assets/xianbao/apple-touch-icon.png>
+<link rel="stylesheet" href="/assets/xianbao/xianbao-topbar.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+</head>
+<body class="layout-list">
+<div id="xianbao-topbar" data-active="ceping"></div>
+
+    <!-- 测评站专属导航 -->
+    <div class="ceping-header container">
+        <div class="ch-logo">
+            <i class="fas fa-brain"></i>
+            <span>心镜·心理测评</span>
+        </div>
+        <div class="ch-nav">
+            <a href="index.html"><i class="fas fa-home"></i> 首页</a>
+            <a href="assessments.html" class="active"><i class="fas fa-clipboard-list"></i> 测评库</a>
+            <a href="records.html"><i class="fas fa-chart-line"></i> 报告</a>
+        </div>
+    </div>
+
+    <main id="app">
+
+        <!-- 测评列表 -->
+        <section id="assessments" class="section assessments">
+            <div class="container">
+                
+                <div class="assessment-grid" id="assessmentGrid">
+                    <div class="loading">
+                        <i class="fas fa-spinner fa-spin"></i>
+                        <p>加载测评列表...</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- 测评详情 -->
+        <section id="assessmentDetail" class="section assessment-detail" style="display: none;">
+            <div class="container">
+                <div class="assessment-header">
+                    <h2 id="assessmentTitle">测评标题</h2>
+                    <div class="assessment-meta">
+                        <span class="meta-item"><i class="fas fa-clock"></i><span id="assessmentTime">15分钟</span></span>
+                        <span class="meta-item"><i class="fas fa-question-circle"></i><span id="assessmentQuestions">60题</span></span>
+                        <span class="meta-item"><i class="fas fa-tag"></i><span id="assessmentCategory">性格测评</span></span>
+                    </div>
+                </div>
+                <div class="assessment-description">
+                    <p id="assessmentDesc">测评描述...</p>
+                </div>
+                <div class="assessment-actions">
+                    <button id="backToList" class="btn btn-outline">
+                        <i class="fas fa-arrow-left"></i> 返回列表
+                    </button>
+                    <button id="startTest" class="btn btn-primary btn-lg">
+                        <i class="fas fa-play"></i> 开始测试
+                    </button>
+                </div>
+            </div>
+        </section>
+
+        <!-- 测试页面 -->
+        <section id="testPage" class="section test-page" style="display: none;">
+            <div class="container">
+                <div class="test-content">
+                    <div class="test-assessment-name" id="testAssessmentName"></div>
+                    <div class="question-card">
+                        <h3 id="questionText">问题内容...</h3>
+                        <div class="question-options" id="questionOptions"></div>
+                    </div>
+                    <div class="test-navigation">
+                        <button id="prevQuestion" class="btn btn-outline" disabled><i class="fas fa-chevron-left"></i> 上一题</button>
+                        <button id="nextQuestion" class="btn btn-primary">下一题 <i class="fas fa-chevron-right"></i></button>
+                        <button id="submitTest" class="btn btn-success" style="display: none;"><i class="fas fa-paper-plane"></i> 提交测评</button>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- 结果页面 -->
+        <section id="resultPage" class="section result-page" style="display: none;">
+            <div class="container">
+                <div class="result-header">
+                    <h2 id="resultTitle">测评结果</h2>
+                </div>
+                <div class="result-content">
+                    <div class="result-card">
+                        <h3><i class="fas fa-chart-bar"></i> 测评得分</h3>
+                        <div class="score-display">
+                            <div class="score-circle"><span id="totalScore">0</span><small>总分</small></div>
+                            <div class="score-details" id="scoreDetails"></div>
+                        </div>
+                    </div>
+                    <div class="result-card">
+                        <h3><i class="fas fa-lightbulb"></i> 建议与指导</h3>
+                        <div class="recommendations" id="recommendations"></div>
+                    </div>
+                </div>
+                <div class="result-actions">
+                    <button id="downloadPdf" class="btn btn-outline"><i class="fas fa-download"></i> 下载PDF</button>
+                    <button id="newAssessment" class="btn btn-success"><i class="fas fa-redo"></i> 新的测评</button>
+                </div>
+            </div>
+        </section>
+
+    </main>
+
+    <!-- 保存格式选择模态框 -->
+<script src="js/app_database.js?v=317"></script>
+<script src="/assets/xianbao/auth-widget.js"></script>
+<script src="/assets/xianbao/xianbao-topbar.js"></script>
+<script>
+// Override showSection: 'home' → redirect to index.html
+(function(){
+    function patchShowSection() {
+        if (!window.psychApp) return false;
+        var origShow = psychApp.showSection;
+        psychApp.showSection = function(sectionId) {
+            if (sectionId === 'home') {
+                window.location.href = 'index.html';
+                return;
+            }
+            return origShow.call(psychApp, sectionId);
+        };
+        return true;
+    }
+    
+    var checkInit = setInterval(function(){
+        if (!window.psychApp) return;
+        if (!patchShowSection()) return;
+        clearInterval(checkInit);
+        
+        // Show assessments section by default (constructor tried 'home' which doesn't exist)
+        psychApp.showSection('assessments');
+        
+        document.getElementById('assessmentGrid').addEventListener('click', function(e) {
+            var card = e.target.closest('.assessment-card');
+            if (card && !e.target.closest('button')) {
+                var id = card.getAttribute('data-id');
+                if (id) psychApp.viewAssessmentDetails(parseInt(id));
+            }
+        });
+        
+        // Handle URL param: ?id=N
+        var params = new URLSearchParams(window.location.search);
+        var id = params.get('id');
+        if (id) {
+            psychApp.viewAssessmentDetails(parseInt(id));
+        }
+    }, 100);
+    setTimeout(function(){ clearInterval(checkInit); }, 5000);
+})();
+</script>
+    <footer class="footer">
+        <div class="container" style="text-align:center;padding:1rem 0;">
+            <p style="margin:0;font-size:0.88rem;color:#666;">&copy; 2026 心镜·心理测评 · <a href="https://beian.miit.gov.cn/" target="_blank" rel="noopener noreferrer" style="color:#666;">渝ICP备2025020357号</a></p>
+        </div>
+    </footer>
+</body>
+</html>

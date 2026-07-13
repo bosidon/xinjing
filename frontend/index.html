@@ -1,0 +1,550 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
+    <meta http-equiv="Pragma" content="no-cache">
+    <meta http-equiv="Expires" content="0">
+    <title>心镜·心理测评 - 专业的在线心理测评平台</title>
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="css/responsive.css">
+    <link rel="stylesheet" href="/assets/xianbao/fontawesome/css/all.min.css">
+    <style>
+        @font-face {
+            font-family: 'Noto Serif SC';
+            src: url('/assets/xianbao/NotoSerifSC-SemiBold.subset.woff2') format('woff2');
+            font-weight: 600;
+            font-display: swap;
+        }
+        body{padding-top:60px;}
+
+        /* ===== 头部导航改造 ===== */
+        .ceping-header {
+            padding: 0.75rem 0;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            border-bottom: 1px solid rgba(148, 163, 184, 0.06);
+            margin-bottom: 2rem;
+        }
+
+        .ceping-header .ch-logo {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-weight: 700;
+            font-size: 1.2rem;
+            font-family: 'Songti SC', 'Noto Serif SC', 'STSong', 'SimSun', serif;
+            color: #f0f4ff;
+        }
+        .ceping-header .ch-logo i {
+            font-size: 1.6rem;
+            color: #22d3ee;
+            filter: drop-shadow(0 0 12px rgba(34, 211, 238, 0.3));
+        }
+        .ceping-header .ch-nav {
+            display: flex;
+            gap: 1.8rem;
+            align-items: center;
+            font-weight: 500;
+            font-size: 0.88rem;
+        }
+        .ceping-header .ch-nav a {
+            text-decoration: none;
+            color: #94a3b8;
+            transition: color 0.2s;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+        .ceping-header .ch-nav a:hover { color: #22d3ee; }
+        .ceping-header .ch-nav a.active { color: #22d3ee; }
+
+
+        /* ===== Hero ===== */
+        .hero .container {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 3rem;
+            align-items: center;
+            text-align: left;
+        }
+
+        .hero-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            background: rgba(34, 211, 238, 0.1);
+            color: #22d3ee;
+            font-weight: 600;
+            font-size: 0.88rem;
+            padding: 0.35rem 1rem;
+            border-radius: 40px;
+            margin-bottom: 1.2rem;
+            border: 1px solid rgba(34, 211, 238, 0.15);
+            backdrop-filter: blur(4px);
+        }
+        .hero-badge i { font-size: 0.8rem; }
+
+        .hero-content { position: relative; z-index: 1; width: 100%; }
+
+        .hero-title {
+            font-size: 2.4rem;
+            font-weight: 700;
+            line-height: 1.2;
+            margin-bottom: 0.75rem;
+            color: #f0f4ff;
+            font-family: 'Songti SC', 'Noto Serif SC', 'STSong', 'SimSun', serif;
+            letter-spacing: -0.5px;
+        }
+        .hero-title .gradient-text {
+            background: linear-gradient(135deg, #22d3ee, #a855f7);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+        }
+
+        .hero-subtitle {
+            font-size: 1rem;
+            color: #94a3b8;
+            margin-bottom: 1.5rem;
+            max-width: 460px;
+            line-height: 1.6;
+        }
+
+        .hero-actions { display: flex; gap: 1rem; flex-wrap: wrap; justify-content: flex-start; }
+
+        .hero-stats {
+            display: flex;
+            gap: 2rem;
+            margin-top: 1.8rem;
+            padding-top: 1.5rem;
+            border-top: 1px solid rgba(148, 163, 184, 0.1);
+        }
+        .hero-stats .stat-item {
+            display: flex;
+            flex-direction: column;
+        }
+        .hero-stats .number {
+            font-weight: 700;
+            font-size: 1.5rem;
+            color: #f0f4ff;
+        }
+        .hero-stats .label {
+            font-size: 0.88rem;
+            color: #64748b;
+            letter-spacing: 0.3px;
+        }
+
+        .hero-image {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 280px;
+        }
+
+        .hero-graphic { position: relative; width: 240px; height: 240px; }
+        .hero-graphic-inner {
+            position: relative;
+            width: 100%;
+            height: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .hero-graphic-inner .fa-brain {
+            font-size: 4.5rem;
+            color: #22d3ee;
+            filter: drop-shadow(0 0 30px rgba(34, 211, 238, 0.5));
+            animation: floatBrain 4s ease-in-out infinite;
+            z-index: 2;
+        }
+        .hero-graphic .orbit {
+            position: absolute;
+            inset: 0;
+            animation: spinOrbit 12s linear infinite;
+        }
+        .hero-graphic .orbit span {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 36px;
+            height: 36px;
+            background: rgba(17, 24, 39, 0.8);
+            border: 1px solid rgba(148, 163, 184, 0.15);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.88rem;
+            color: #22d3ee;
+            transform: translate(-50%, -50%) rotate(var(--angle)) translateX(100px) rotate(calc(-1 * var(--angle)));
+            box-shadow: 0 0 16px rgba(34, 211, 238, 0.08);
+            animation: orbitPulse 3s ease-in-out infinite;
+            animation-delay: calc(var(--angle) / 360deg * 3s);
+        }
+        .hero-graphic-glow {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 180px;
+            height: 180px;
+            background: radial-gradient(circle, rgba(34, 211, 238, 0.12) 0%, transparent 70%);
+            border-radius: 50%;
+            filter: blur(40px);
+            pointer-events: none;
+        }
+
+        @keyframes spinOrbit { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
+        @keyframes floatBrain { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-12px); } }
+        @keyframes orbitPulse { 0%, 100% { opacity: 0.6; } 50% { opacity: 1; } }
+
+        /* ===== 热门测评 ===== */
+        .hot-section { padding: 0 0 3rem; }
+        .hot-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: baseline;
+            flex-wrap: wrap;
+            margin-bottom: 1.8rem;
+        }
+        .hot-header h2 {
+            font-weight: 700;
+            font-size: 1.2rem;
+            font-family: 'Songti SC', 'Noto Serif SC', 'STSong', 'SimSun', serif;
+            color: #f0f4ff;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        .hot-header h2 i { color: #22d3ee; font-size: 1.2rem; }
+        .hot-header a {
+            color: #22d3ee;
+            font-weight: 500;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            font-size: 0.88rem;
+            border-bottom: 1.5px solid transparent;
+            transition: 0.2s;
+        }
+        .hot-header a:hover { border-bottom-color: #22d3ee; }
+        .hot-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+            gap: 1.5rem;
+        }
+        .hot-card {
+            background: rgba(17, 24, 39, 0.6);
+            backdrop-filter: blur(8px);
+            -webkit-backdrop-filter: blur(8px);
+            border-radius: 20px;
+            padding: 1.5rem;
+            border: 1px solid rgba(148, 163, 184, 0.08);
+            transition: all 0.25s ease;
+            display: flex;
+            flex-direction: column;
+            cursor: pointer;
+            text-decoration: none;
+            color: inherit;
+        }
+        .hot-card:hover {
+            transform: translateY(-6px);
+            border-color: rgba(34, 211, 238, 0.2);
+            box-shadow: 0 8px 32px rgba(59,130,246,0.15), 0 0 40px rgba(34,211,238,0.05);
+            background: rgba(17, 24, 39, 0.8);
+        }
+        .hot-card .hc-icon {
+            font-size: 1.6rem;
+            color: #22d3ee;
+            margin-bottom: 1rem;
+            width: 48px;
+            height: 48px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 16px;
+            background: rgba(34, 211, 238, 0.08);
+        }
+        .hot-card:nth-child(2) .hc-icon { color: #f5a623; background: rgba(245, 166, 35, 0.08); }
+        .hot-card:nth-child(3) .hc-icon { color: #a855f7; background: rgba(168, 85, 247, 0.08); }
+        .hot-card:nth-child(4) .hc-icon { color: #ec4899; background: rgba(236, 72, 153, 0.08); }
+        .hot-card h3 {
+            font-weight: 700;
+            font-size: 1.1rem;
+            margin-bottom: 0.4rem;
+            color: #f0f4ff;
+            font-family: 'Songti SC', 'Noto Serif SC', 'STSong', 'SimSun', serif;
+        }
+        .hot-card p {
+            font-size: 0.88rem;
+            line-height: 1.5;
+            color: #94a3b8;
+            margin-bottom: 1.2rem;
+            flex: 1;
+        }
+        .hot-card .hc-tag {
+            font-size: 0.88rem;
+            font-weight: 600;
+            color: #22d3ee;
+            background: rgba(34, 211, 238, 0.08);
+            padding: 0.2rem 0.8rem;
+            border-radius: 30px;
+            align-self: flex-start;
+            border: 1px solid rgba(34, 211, 238, 0.1);
+        }
+
+        /* ===== 今日推荐 ===== */
+        .featured-section {
+            padding: 1.5rem 0 0;
+            margin-bottom: 2.5rem;
+            border-top: 1px solid rgba(148, 163, 184, 0.06);
+        }
+        .featured-header { margin-bottom: 1rem; }
+        .feat-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            font-size: 0.88rem;
+            font-weight: 600;
+            color: #f5a623;
+        }
+        .feat-badge i { font-size: 0.8rem; }
+        .feat-cards {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1.25rem;
+        }
+        .feat-card {
+            background: rgba(17, 24, 39, 0.6);
+            backdrop-filter: blur(8px);
+            border-radius: 20px;
+            padding: 1.5rem;
+            border: 1px solid rgba(148, 163, 184, 0.08);
+            display: flex;
+            align-items: flex-start;
+            gap: 1rem;
+            cursor: pointer;
+            transition: all 0.25s ease;
+            text-decoration: none;
+            color: inherit;
+        }
+        .feat-card:hover {
+            transform: translateY(-4px);
+            border-color: rgba(34, 211, 238, 0.2);
+            box-shadow: 0 8px 32px rgba(59,130,246,0.12);
+            background: rgba(17, 24, 39, 0.8);
+        }
+        .feat-card-icon {
+            font-size: 1.4rem;
+            color: #22d3ee;
+            width: 44px;
+            height: 44px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 14px;
+            background: rgba(34, 211, 238, 0.08);
+            flex-shrink: 0;
+        }
+        .feat-card-text { flex: 1; min-width: 0; }
+        .feat-card-text h4 {
+            font-weight: 700;
+            font-size: 1rem;
+            color: #f0f4ff;
+            margin-bottom: 0.3rem;
+            font-family: 'Songti SC', 'Noto Serif SC', 'STSong', 'SimSun', serif;
+        }
+        .feat-card-text p {
+            font-size: 0.88rem;
+            color: #94a3b8;
+            line-height: 1.5;
+            display: -webkit-box;
+            -webkit-line-clamp: 2;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+        }
+        .feat-card-tag {
+            font-size: 0.88rem;
+            font-weight: 600;
+            color: #22d3ee;
+            background: rgba(34, 211, 238, 0.08);
+            padding: 0.2rem 0.7rem;
+            border-radius: 20px;
+            white-space: nowrap;
+            flex-shrink: 0;
+            align-self: center;
+        }
+        @media (max-width: 600px) {
+            .feat-cards { grid-template-columns: 1fr; }
+        }
+
+        /* ===== 响应式 ===== */
+        @media (max-width: 768px) {
+            .hero .container { grid-template-columns: 1fr; text-align: center; gap: 2rem; }
+            .hero-actions { justify-content: center; }
+            .hero-subtitle { max-width: 100%; }
+            .hero-title { font-size: 1.8rem; }
+            .hero-stats { justify-content: center; }
+            .hero-image { padding: 1.5rem; min-height: 200px; }
+            .hot-grid { grid-template-columns: repeat(auto-fit, minmax(160px, 1fr)); }
+            .featured-section { flex-direction: column; align-items: flex-start; }
+            .ceping-header { flex-direction: column; gap: 0.8rem; padding: 1rem; }
+            .ceping-header .ch-nav { gap: 1rem; flex-wrap: wrap; justify-content: center; }
+            .hero-graphic { width: 180px; height: 180px; }
+            .hero-graphic-inner .fa-brain { font-size: 3.5rem; }
+            .hero-graphic .orbit span { width: 28px; height: 28px; font-size: 0.78rem; transform: translate(-50%, -50%) rotate(var(--angle)) translateX(70px) rotate(calc(-1 * var(--angle))); }
+        }
+
+        @media (max-width: 480px) {
+            .hero-title { font-size: 1.5rem; }
+            .hero-stats { gap: 1.2rem; flex-wrap: wrap; }
+            .hero-stats .number { font-size: 1.2rem; }
+        }
+    </style>
+<link rel=icon type=image/x-icon href=/assets/xianbao/favicon.ico>
+<link rel=icon type=image/png sizes=16x16 href=/assets/xianbao/favicon-16.png>
+<link rel=icon type=image/png sizes=32x32 href=/assets/xianbao/favicon-32.png>
+<link rel=icon type=image/png sizes=192x192 href=/assets/xianbao/favicon-256.png>
+<link rel=apple-touch-icon sizes=180x180 href=/assets/xianbao/apple-touch-icon.png>
+
+<link rel="stylesheet" href="/assets/xianbao/xianbao-topbar.css">
+</head>
+<body>
+<div id="xianbao-topbar" data-active="ceping"></div>
+
+    <!-- 测评站专属导航 -->
+    <div class="ceping-header container">
+        <div class="ch-logo">
+            <i class="fas fa-brain"></i>
+            <span>心镜·心理测评</span>
+        </div>
+        <div class="ch-nav">
+            <a href="index.html" class="active"><i class="fas fa-home"></i> 首页</a>
+            <a href="assessments.html"><i class="fas fa-clipboard-list"></i> 测评库</a>
+            <a href="records.html"><i class="fas fa-chart-line"></i> 报告</a>
+        </div>
+    </div>
+
+    <main>
+
+        <!-- 首页 Hero -->
+        <section class="hero" style="border:none;">
+            <div class="container">
+                <div class="hero-content">
+                    <span class="hero-badge"><i class="fas fa-heart"></i> 科学 · 精准 · 隐私</span>
+                    <h1 class="hero-title">探索内心世界<br><span class="gradient-text">从一份测评开始</span></h1>
+                    <p class="hero-subtitle">专业的在线心理测评平台，提供科学、准确的心理评估工具</p>
+                    <div class="hero-actions">
+                        <a href="assessments.html" class="btn btn-primary btn-lg" style="text-decoration:none;display:inline-flex;align-items:center;gap:8px;">
+                            <i class="fas fa-play-circle"></i> 开始测评
+                        </a>
+                        <a href="#hot" class="btn btn-outline btn-lg" style="text-decoration:none;display:inline-flex;align-items:center;gap:8px;">
+                            <i class="fas fa-info-circle"></i> 了解更多
+                        </a>
+                    </div>
+                    <div class="hero-stats">
+                        <div class="stat-item"><span class="number">80+</span><span class="label">专业量表</span></div>
+                        <div class="stat-item"><span class="number">12k</span><span class="label">信赖用户</span></div>
+                        <div class="stat-item"><span class="number">4.9</span><span class="label">用户评分</span></div>
+                    </div>
+                </div>
+                <div class="hero-image">
+                    <div class="hero-graphic">
+                        <div class="hero-graphic-inner">
+                            <i class="fas fa-brain"></i>
+                            <div class="orbit">
+                                <span style="--angle:0deg;--color:#22d3ee"><i class="fas fa-heart-pulse"></i></span>
+                                <span style="--angle:72deg;--color:#3b82f6"><i class="fas fa-user-check"></i></span>
+                                <span style="--angle:144deg;--color:#a855f7"><i class="fas fa-chart-line"></i></span>
+                                <span style="--angle:216deg;--color:#34d399"><i class="fas fa-shield-halved"></i></span>
+                                <span style="--angle:288deg;--color:#ec4899"><i class="fas fa-compass"></i></span>
+                            </div>
+                        </div>
+                        <div class="hero-graphic-glow"></div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <a id="hot" style="display:block;scroll-margin-top:80px;"></a>
+
+        <!-- 热门测评 -->
+        <div class="hot-section">
+            <div class="container">
+                <div class="hot-header">
+                    <h2><i class="fas fa-fire"></i> 热门测评</h2>
+                    <a href="assessments.html">查看全部 <i class="fas fa-chevron-right"></i></a>
+                </div>
+                <div class="hot-grid">
+                    <a href="assessments.html?id=7" class="hot-card" target="_blank">
+                        <div class="hc-icon"><i class="fas fa-heart"></i></div>
+                        <h3>情商(EQ)测试</h3>
+                        <p>评估自我认知、同理心、情绪调节、社交技能和自我激励五个维度的情绪管理能力。</p>
+                        <span class="hc-tag">15 min · 20题</span>
+                    </a>
+                    <a href="assessments.html?id=8" class="hot-card" target="_blank">
+                        <div class="hc-icon"><i class="fas fa-coins"></i></div>
+                        <h3>财商指数</h3>
+                        <p>从价值认同、自我信念、成长心态等七个维度评估你的财商思维模式。</p>
+                        <span class="hc-tag">15 min · 42题</span>
+                    </a>
+                    <a href="assessments.html?id=9" class="hot-card" target="_blank">
+                        <div class="hc-icon"><i class="fas fa-hand-holding-heart"></i></div>
+                        <h3>自我关怀</h3>
+                        <p>评估自我接纳、自我关怀、边界意识、内在肯定和情绪接纳等维度。</p>
+                        <span class="hc-tag">10 min · 26题</span>
+                    </a>
+                    <a href="assessments.html?id=17" class="hot-card" target="_blank">
+                        <div class="hc-icon"><i class="fas fa-ring"></i></div>
+                        <h3>婚恋关系</h3>
+                        <p>从接纳、尊重、信任、亲密七个维度评估你的婚恋关系。</p>
+                        <span class="hc-tag">15 min · 28题</span>
+                    </a>
+                </div>
+            </div>
+        </div>
+
+        <!-- 今日推荐 -->
+        <div class="container">
+            <div class="featured-section">
+                <div class="featured-header">
+                    <span class="feat-badge"><i class="fas fa-star"></i> 今日推荐</span>
+                </div>
+                <div class="feat-cards">
+                    <a href="assessments.html?id=16" class="feat-card" target="_blank">
+                        <div class="feat-card-icon"><i class="fas fa-child"></i></div>
+                        <div class="feat-card-text">
+                            <h4>亲子关系</h4>
+                            <p>从看见需要、情感回应、接纳与放手六个维度，评估亲子关系的真实质量。</p>
+                        </div>
+                        <span class="feat-card-tag">12 min</span>
+                    </a>
+                    <a href="assessments.html?id=18" class="feat-card" target="_blank">
+                        <div class="feat-card-icon" style="color:#ec4899;background:rgba(236,72,153,0.08);"><i class="fas fa-heart"></i></div>
+                        <div class="feat-card-text">
+                            <h4>性心理</h4>
+                            <p>从性态度、身体认知、性自主感、自我认同、性焦虑、性认知素养六个维度，了解自己的性心理状态。</p>
+                        </div>
+                        <span class="feat-card-tag">10 min</span>
+                    </a>
+                </div>
+            </div>
+        </div>
+
+    </main>
+
+    <!-- 页脚 -->
+    <footer class="footer">
+        <div class="container" style="text-align:center;padding:1rem 0;">
+            <p style="margin:0;font-size:0.88rem;color:#666;">&copy; 2026 心镜·心理测评 · <a href="https://beian.miit.gov.cn/" target="_blank" rel="noopener noreferrer" style="color:#666;">渝ICP备2025020357号</a></p>
+        </div>
+    </footer>
+
+<script src="/assets/xianbao/auth-widget.js"></script>
+<script src="/assets/xianbao/xianbao-topbar.js"></script>
+</body>
+</html>

@@ -1,0 +1,236 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
+    <meta http-equiv="Pragma" content="no-cache">
+    <meta http-equiv="Expires" content="0">
+    <title>测评报告 - 心镜·心理测评</title>
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="css/responsive.css">
+    <link rel="stylesheet" href="/assets/xianbao/fontawesome/css/all.min.css">
+    <style>
+        @font-face {
+            font-family: 'Noto Serif SC';
+            src: url('/assets/xianbao/NotoSerifSC-SemiBold.subset.woff2') format('woff2');
+            font-weight: 600;
+            font-display: swap;
+        }
+        body{padding-top:60px;}
+
+        .ceping-header {
+            padding: 0.75rem 0;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            border-bottom: 1px solid rgba(148, 163, 184, 0.06);
+            margin-bottom: 2rem;
+        }
+        .ceping-header .ch-logo {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-weight: 700;
+            font-size: 1.2rem;
+            font-family: 'Songti SC', 'Noto Serif SC', 'STSong', 'SimSun', serif;
+            color: #f0f4ff;
+        }
+        .ceping-header .ch-logo i {
+            font-size: 1.6rem;
+            color: #22d3ee;
+            filter: drop-shadow(0 0 12px rgba(34, 211, 238, 0.3));
+        }
+        .ceping-header .ch-nav {
+            display: flex;
+            gap: 1.8rem;
+            align-items: center;
+            font-weight: 500;
+            font-size: 0.88rem;
+        }
+        .ceping-header .ch-nav a {
+            text-decoration: none;
+            color: #94a3b8;
+            transition: color 0.2s;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+        .ceping-header .ch-nav a:hover { color: #22d3ee; }
+        .ceping-header .ch-nav a.active { color: #22d3ee; }
+
+        .records-page { display: block; }
+        .records-tabs { display: flex; gap: 0.5rem; margin-bottom: 1.5rem; }
+        .records-tabs .tab-btn {
+            padding: 0.5rem 1.2rem;
+            border-radius: 30px;
+            border: 1px solid rgba(148,163,184,0.1);
+            background: transparent;
+            color: #94a3b8;
+            cursor: pointer;
+            font-size: 0.88rem;
+            transition: all 0.2s;
+        }
+        .records-tabs .tab-btn.active {
+            background: rgba(34,211,238,0.1);
+            border-color: rgba(34,211,238,0.2);
+            color: #22d3ee;
+        }
+        .records-filters {
+            display: flex;
+            gap: 1rem;
+            flex-wrap: wrap;
+            margin-bottom: 1.5rem;
+            padding: 1rem;
+            background: rgba(17,24,39,0.4);
+            border-radius: 16px;
+            border: 1px solid rgba(148,163,184,0.06);
+        }
+        .records-filters .filter-group {
+            display: flex;
+            flex-direction: column;
+            gap: 0.3rem;
+        }
+        .records-filters label { font-size: 0.78rem; color: #64748b; }
+        .records-filters select,
+        .records-filters input {
+            background: rgba(148,163,184,0.06);
+            border: 1px solid rgba(148,163,184,0.1);
+            border-radius: 8px;
+            padding: 0.4rem 0.7rem;
+            color: #cbd5e1;
+            font-size: 0.82rem;
+        }
+
+        .loading {
+            text-align: center;
+            padding: 3rem;
+            color: #94a3b8;
+        }
+        .loading i { font-size: 2rem; color: #22d3ee; margin-bottom: 1rem; }
+
+        .footer { margin-top: 3rem; }
+
+        @media (max-width: 768px) {
+            .ceping-header { flex-direction: column; gap: 0.8rem; padding: 1rem; }
+            .ceping-header .ch-nav { gap: 1rem; flex-wrap: wrap; justify-content: center; }
+            .records-filters { flex-direction: column; }
+        }
+    </style>
+<link rel=icon type=image/x-icon href=/assets/xianbao/favicon.ico>
+<link rel=icon type=image/png sizes=16x16 href=/assets/xianbao/favicon-16.png>
+<link rel=icon type=image/png sizes=32x32 href=/assets/xianbao/favicon-32.png>
+<link rel=icon type=image/png sizes=192x192 href=/assets/xianbao/favicon-256.png>
+<link rel=apple-touch-icon sizes=180x180 href=/assets/xianbao/apple-touch-icon.png>
+<link rel="stylesheet" href="/assets/xianbao/xianbao-topbar.css">
+</head>
+<body>
+<div id="xianbao-topbar" data-active="ceping"></div>
+
+    <div class="ceping-header container">
+        <div class="ch-logo">
+            <i class="fas fa-brain"></i>
+            <span>心镜·心理测评</span>
+        </div>
+        <div class="ch-nav">
+            <a href="index.html"><i class="fas fa-home"></i> 首页</a>
+            <a href="assessments.html"><i class="fas fa-clipboard-list"></i> 测评库</a>
+            <a href="records.html" class="active"><i class="fas fa-chart-line"></i> 报告</a>
+        </div>
+    </div>
+
+    <main id="app">
+        <section id="records" class="section records-page">
+            <div class="container">
+                <h2 class="section-title">测评记录</h2>
+                <div class="records-tabs" id="recordsTabs">
+                    <button class="tab-btn active" onclick="psychApp.switchRecordsTab('my')">我的测评记录</button>
+                    <button class="tab-btn" id="adminRecordsTab" style="display:none;" onclick="psychApp.switchRecordsTab('all')">所有记录</button>
+                </div>
+                <div class="records-filters" id="recordsFilters" style="display:none;">
+                    <div class="filter-group">
+                        <label>用户</label>
+                        <select id="filterUserId" onchange="psychApp.loadAllRecords()"><option value="">全部用户</option></select>
+                    </div>
+                    <div class="filter-group">
+                        <label>测评类型</label>
+                        <select id="filterAssessmentId" onchange="psychApp.loadAllRecords()"><option value="">全部类型</option></select>
+                    </div>
+                    <div class="filter-group">
+                        <label>开始日期</label>
+                        <input type="date" id="filterStartDate" onchange="psychApp.loadAllRecords()">
+                    </div>
+                    <div class="filter-group">
+                        <label>结束日期</label>
+                        <input type="date" id="filterEndDate" onchange="psychApp.loadAllRecords()">
+                    </div>
+                </div>
+                <div class="records-content">
+                    <div id="myRecordsList" class="records-list">
+                        <div class="loading"><i class="fas fa-spinner fa-spin"></i><p>加载记录...</p></div>
+                    </div>
+                    <div id="allRecordsList" class="records-list" style="display:none;">
+                        <div class="loading"><i class="fas fa-spinner fa-spin"></i><p>加载所有记录...</p></div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- 测评详情（用于从记录查看结果） -->
+        <section id="assessmentDetail" class="section assessment-detail" style="display: none;">
+            <div class="container"></div>
+        </section>
+        <!-- 测评结果详情 -->
+        <section id="resultPage" class="section result-page" style="display: none;">
+            <div class="container">
+                <div class="result-header">
+                    <h2>测评结果</h2>
+                </div>
+                <div class="result-content">
+                    <div class="result-card">
+                        <h3><i class="fas fa-chart-bar"></i> 测评得分</h3>
+                        <div class="score-display">
+                            <div class="score-circle">
+                                <span id="totalScore">0</span>
+                                <small>总分</small>
+                            </div>
+                            <div class="score-details" id="scoreDetails"><!-- 得分详情 --></div>
+                        </div>
+                    </div>
+                    <div class="result-card">
+                        <h3><i class="fas fa-lightbulb"></i> 建议与指导</h3>
+                        <div class="recommendations" id="recommendations"><!-- 建议列表 --></div>
+                    </div>
+                </div>
+                <div class="result-actions">
+                    <button id="backToRecords" class="btn btn-outline" onclick="psychApp.showSection('records');psychApp.loadMyRecords();">
+                        <i class="fas fa-arrow-left"></i> 返回记录
+                    </button>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <footer class="footer">
+        <div class="container" style="text-align:center;padding:1rem 0;">
+            <p style="margin:0;font-size:0.88rem;color:#666;">&copy; 2026 心镜·心理测评 · <a href="https://beian.miit.gov.cn/" target="_blank" rel="noopener noreferrer" style="color:#666;">渝ICP备2025020357号</a></p>
+        </div>
+    </footer>
+
+<script src=js/app_database.js></script>
+<script src=/assets/xianbao/auth-widget.js></script>
+<script src=/assets/xianbao/xianbao-topbar.js></script>
+<script>
+(function(){
+    var checkInit = setInterval(function(){
+        if (window.psychApp) {
+            clearInterval(checkInit);
+            psychApp.showSection('records');
+            psychApp.loadMyRecords();
+        }
+    }, 100);
+    setTimeout(function(){ clearInterval(checkInit); }, 5000);
+})();
+</script>
+</body>
+</html>
