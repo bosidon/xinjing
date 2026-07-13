@@ -7,7 +7,7 @@
     <meta http-equiv="Pragma" content="no-cache">
     <meta http-equiv="Expires" content="0">
     <title>测评库 - 心镜·心理测评</title>
-    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="css/style.css?v=3">
     <link rel="stylesheet" href="css/responsive.css">
     <link rel="stylesheet" href="/assets/xianbao/fontawesome/css/all.min.css">
     <style>
@@ -150,30 +150,6 @@
 
         /* ===== 测试页面 ===== */
         .test-page { display: none; }
-        .test-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 2rem;
-        }
-        .test-progress { flex: 1; margin-right: 1.5rem; }
-        .progress-bar {
-            height: 6px;
-            background: rgba(148,163,184,0.1);
-            border-radius: 4px;
-            overflow: hidden;
-            margin-bottom: 0.5rem;
-        }
-        .progress-fill {
-            height: 100%;
-            background: linear-gradient(90deg, #22d3ee, #a855f7);
-            border-radius: 4px;
-            transition: width 0.3s ease;
-            width: 0%;
-        }
-        .progress-text { font-size: 0.82rem; color: #64748b; }
-        .test-timer { font-size: 0.88rem; color: #94a3b8; display: flex; align-items: center; gap: 6px; }
-        .test-timer i { color: #22d3ee; }
         .question-card {
             background: rgba(17,24,39,0.6);
             backdrop-filter: blur(8px);
@@ -226,7 +202,6 @@
             align-items: center;
             flex-wrap: wrap;
         }
-        .missing-hint { color: #ef4444; font-size: 0.82rem; margin-left: 1rem; }
         @keyframes submitPulse {
             0%, 100% { box-shadow: 0 0 0 0 rgba(34,197,94,0.4); }
             50% { box-shadow: 0 0 0 8px rgba(34,197,94,0); }
@@ -360,7 +335,6 @@
             .ceping-header { flex-direction: column; gap: 0.8rem; padding: 1rem; }
             .ceping-header .ch-nav { gap: 1rem; flex-wrap: wrap; justify-content: center; }
             .assessment-grid { grid-template-columns: 1fr; }
-            .test-header { flex-direction: column; gap: 1rem; }
             .score-display { flex-direction: column; align-items: flex-start; }
         }
 
@@ -426,6 +400,14 @@
                 border-radius: 20px;
             }
         }
+        #testAssessmentName {
+            font-size: 1rem !important;
+            color: #22d3ee !important;
+            text-align: center !important;
+            margin-bottom: 1rem;
+            font-weight: 600 !important;
+            letter-spacing: 0.5px;
+        }
     </style>
 <link rel=icon type=image/x-icon href=/assets/xianbao/favicon.ico>
 <link rel=icon type=image/png sizes=16x16 href=/assets/xianbao/favicon-16.png>
@@ -433,6 +415,8 @@
 <link rel=icon type=image/png sizes=192x192 href=/assets/xianbao/favicon-256.png>
 <link rel=apple-touch-icon sizes=180x180 href=/assets/xianbao/apple-touch-icon.png>
 <link rel="stylesheet" href="/assets/xianbao/xianbao-topbar.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
 </head>
 <body class="layout-list">
 <div id="xianbao-topbar" data-active="ceping"></div>
@@ -468,9 +452,6 @@
         <!-- 测评详情 -->
         <section id="assessmentDetail" class="section assessment-detail" style="display: none;">
             <div class="container">
-                <button id="backToList" class="btn btn-outline">
-                    <i class="fas fa-arrow-left"></i> 返回列表
-                </button>
                 <div class="assessment-header">
                     <h2 id="assessmentTitle">测评标题</h2>
                     <div class="assessment-meta">
@@ -483,6 +464,9 @@
                     <p id="assessmentDesc">测评描述...</p>
                 </div>
                 <div class="assessment-actions">
+                    <button id="backToList" class="btn btn-outline">
+                        <i class="fas fa-arrow-left"></i> 返回列表
+                    </button>
                     <button id="startTest" class="btn btn-primary btn-lg">
                         <i class="fas fa-play"></i> 开始测试
                     </button>
@@ -493,24 +477,16 @@
         <!-- 测试页面 -->
         <section id="testPage" class="section test-page" style="display: none;">
             <div class="container">
-                <div class="test-header">
-                    <div class="test-progress">
-                        <div class="progress-bar"><div class="progress-fill" id="progressFill"></div></div>
-                        <div class="progress-text"><span id="currentQuestion">1</span> / <span id="totalQuestions">60</span></div>
-                    </div>
-                    <div class="test-timer"><i class="fas fa-clock"></i><span id="testTimer">00:00</span></div>
-                </div>
                 <div class="test-content">
+                    <div class="test-assessment-name" id="testAssessmentName"></div>
                     <div class="question-card">
                         <h3 id="questionText">问题内容...</h3>
                         <div class="question-options" id="questionOptions"></div>
                     </div>
-                    <div class="missing-questions" id="missingQuestionsList" style="display:none;margin-bottom:0.75rem;text-align:center;"></div>
                     <div class="test-navigation">
                         <button id="prevQuestion" class="btn btn-outline" disabled><i class="fas fa-chevron-left"></i> 上一题</button>
                         <button id="nextQuestion" class="btn btn-primary">下一题 <i class="fas fa-chevron-right"></i></button>
                         <button id="submitTest" class="btn btn-success" style="display: none;"><i class="fas fa-paper-plane"></i> 提交测评</button>
-                        <div id="missingQuestionHint" class="missing-hint" style="display: none;"></div>
                     </div>
                 </div>
             </div>
@@ -520,7 +496,7 @@
         <section id="resultPage" class="section result-page" style="display: none;">
             <div class="container">
                 <div class="result-header">
-                    <h2>测评结果</h2>
+                    <h2 id="resultTitle">测评结果</h2>
                 </div>
                 <div class="result-content">
                     <div class="result-card">
@@ -536,8 +512,7 @@
                     </div>
                 </div>
                 <div class="result-actions">
-                    <button id="saveResult" class="btn btn-outline"><i class="fas fa-save"></i> 保存结果</button>
-                    <button id="shareResult" class="btn btn-primary"><i class="fas fa-share-alt"></i> 分享结果</button>
+                    <button id="downloadPdf" class="btn btn-outline"><i class="fas fa-download"></i> 下载PDF</button>
                     <button id="newAssessment" class="btn btn-success"><i class="fas fa-redo"></i> 新的测评</button>
                 </div>
             </div>
@@ -546,27 +521,7 @@
     </main>
 
     <!-- 保存格式选择模态框 -->
-    <div id="saveFormatModal" class="modal" style="display: none;">
-        <div class="modal-content" style="max-width: 400px;">
-            <div class="modal-header">
-                <h3>选择保存格式</h3>
-                <button class="modal-close" id="saveFormatClose">&times;</button>
-            </div>
-            <div class="modal-body">
-                <p style="margin-bottom:1.5rem;color:#94a3b8;">请选择测评结果的导出格式：</p>
-                <div class="format-options" style="display:flex;gap:1rem;justify-content:center;">
-                    <button id="saveAsTxt" class="btn btn-outline" style="flex:1;padding:1rem;text-align:center;flex-direction:column;gap:0.5rem;">
-                        <i class="fas fa-file-alt" style="font-size:1.5rem;"></i><span>TXT 文本</span>
-                    </button>
-                    <button id="saveAsJson" class="btn btn-outline" style="flex:1;padding:1rem;text-align:center;flex-direction:column;gap:0.5rem;">
-                        <i class="fas fa-file-code" style="font-size:1.5rem;"></i><span>JSON 数据</span>
-                    </button>
-                </div>
-            </div>
-        </div>
-    </div>
-
-<script src="js/app_database.js"></script>
+<script src="js/app_database.js?v=317"></script>
 <script src="/assets/xianbao/auth-widget.js"></script>
 <script src="/assets/xianbao/xianbao-topbar.js"></script>
 <script>
