@@ -327,11 +327,11 @@
         }
 
         /* ===== 响应式 ===== */
-            .hero-section { height: 480px; }
+            .hero-section { min-height: 480px; }
         @media (max-width: 768px) {
-            .hero-content { width: 60%; }
-            .hero .container { justify-content: flex-start; }
-            .hero { height: 400px; }
+            .hero-content { width: 70%; }
+            .hero .container { justify-content: flex-start; padding-left: 30px; }
+            .hero-section { min-height: 340px; }
             .hero-actions { justify-content: flex-start; }
             .hero-subtitle { max-width: 100%; }
             .hero-title { font-size: 1.8rem; }
