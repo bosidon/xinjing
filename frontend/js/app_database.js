@@ -899,6 +899,9 @@ class PsychologicalAssessmentApp {
 
     // 显示次数用尽卡片（与塔罗站风格一致）
     showLimitCard(targetEl) {
+        if (typeof XianbaoAuth !== 'undefined' && XianbaoAuth.showLimitCard) {
+            return XianbaoAuth.showLimitCard('psych_test', targetEl);
+        }
         const limitHtml =
             '<div style="text-align:center;padding:40px 20px;">' +
             '<div style="font-size:48px;margin-bottom:16px;">📊</div>' +
