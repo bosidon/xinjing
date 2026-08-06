@@ -2011,69 +2011,14 @@ class PsychologicalAssessmentApp {
     async downloadPDF() {
         const btn = document.getElementById('downloadPdf');
         if (btn) { btn.disabled = true; btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> 生成中...'; }
-
         try {
-            const { jsPDF } = window.jspdf;
-            if (!jsPDF) { this.showMessage('PDF库加载失败，请刷新重试', 'error'); btn.disabled = false; btn.innerHTML = '<i class="fas fa-download"></i> 下载PDF'; return; }
-            const pdf = new jsPDF('p', 'mm', 'a4');
-            const pw = pdf.internal.pageSize.getWidth();
-            const m = 10;
-            const cw = pw - m * 2;
-
+            const resultContent = document.querySelector('#resultPage .result-content');
+            if (!resultContent) { this.showMessage('无结果内容', 'error'); return; }
             const name = this.currentAssessment ? this.currentAssessment.name : '心理测评';
             const username = (this.currentUser && this.currentUser.username) ? this.currentUser.username : '未登录';
             const now = new Date();
-            const dateStr = now.getFullYear() + '-' +
-                String(now.getMonth() + 1).padStart(2, '0') + '-' +
-                String(now.getDate()).padStart(2, '0');
-
-            const resultContent = document.querySelector('#resultPage .result-content');
-            if (!resultContent) { this.showMessage('无结果内容', 'error'); btn.disabled = false; btn.innerHTML = '<i class="fas fa-download"></i> 下载PDF'; return; }
-
-            // === 用HTML渲染完整报告（头部+内容），再截图 ===
-            const wrapper = document.createElement('div');
-            wrapper.style.cssText = 'position:fixed;left:-9999px;top:0;width:700px;padding:24px 20px 16px;background:#0a0f1a;font-family:"PingFang SC","Microsoft YaHei","Noto Sans SC",sans-serif;color:#e2e8f0;';
-
-            // 文字头部（HTML渲染，中文字体由浏览器处理）
-            wrapper.innerHTML = '<div style="text-align:center;margin-bottom:16px;">' +
-                '<div style="font-size:22px;font-weight:700;color:#f0f4ff;font-family:Songti SC,Noto Serif SC,STSong,serif;margin-bottom:6px;">' + name + ' · 测评报告</div>' +
-                '<div style="font-size:13px;color:#94a3b8;">用户：' + username + ' &nbsp;|&nbsp; 测试日期：' + dateStr + '</div>' +
-                '<hr style="border:none;border-top:1px solid rgba(148,163,184,0.25);margin:14px 0 0;">' +
-                '</div>';
-
-            // 结果内容
-            wrapper.appendChild(resultContent.cloneNode(true));
-
-            // 移除动画
-            wrapper.querySelectorAll('*').forEach(el => {
-                el.style.animation = 'none';
-                el.style.transition = 'none';
-            });
-
-            document.body.appendChild(wrapper);
-
-            const canvas = await html2canvas(wrapper, {
-                backgroundColor: '#0a0f1a',
-                scale: 2,
-                useCORS: true,
-                logging: false
-            });
-
-            document.body.removeChild(wrapper);
-
-            const imgW = cw;
-            const imgH = (canvas.height * imgW) / canvas.width;
-            const maxH = pdf.internal.pageSize.getHeight() - m * 2;
-            let fw = imgW, fh = imgH;
-            if (imgH > maxH) {
-                fw = imgW * (maxH / imgHeight);
-                fh = maxH;
-            }
-
-            pdf.addImage(canvas.toDataURL('image/png'), 'PNG', m, m, fw, fh);
-
-            const filename = name + '_' + username + '_' + dateStr + '.pdf';
-            pdf.save(filename);
+            const dateStr = now.getFullYear() + '-' + String(now.getMonth() + 1).padStart(2, '0') + '-' + String(now.getDate()).padStart(2, '0');
+            await XD.multiPDF(resultContent, { name: name + '_' + username + '_' + dateStr });
             this.showMessage('PDF下载成功', 'success');
         } catch (error) {
             console.error('PDF生成失败:', error);
