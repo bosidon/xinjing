@@ -42,7 +42,7 @@ function buildAnalysisData(details, assessmentId) {
 // 配置
 const PORT = process.env.PORT || 3003;
 
-const ALLOWED_ORIGINS = (process.env.ALLOWED_ORIGINS || 'http://localhost:8080,http://localhost:1313,http://127.0.0.1:8080,https://ceping.xianbao.online').split(',');
+const ALLOWED_ORIGINS = ((process.env.ALLOWED_ORIGINS || 'http://localhost:8080,http://localhost:1313,http://127.0.0.1:8080') + ',https://xianbao.love').split(',');
 const API_VERSION = '3.0.0';
 
 // 创建Express应用

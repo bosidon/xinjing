@@ -4,7 +4,7 @@
 class PsychologicalAssessmentApp {
     constructor() {
         // 使用数据库版本API
-        this.apiBaseUrl = '/api';
+        this.apiBaseUrl = '/ceping/api';
         this.currentUser = null;
         this.currentAssessment = null;
         this.currentTest = null;
