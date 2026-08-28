@@ -8,22 +8,12 @@ async function runMigration() {
         await database.connect();
         
         // 1. 创建用户表
-        console.log('📋 创建用户表...');
-        await database.run(`
-            CREATE TABLE IF NOT EXISTS users (
-                id INTEGER PRIMARY KEY AUTOINCREMENT,
-                username TEXT NOT NULL UNIQUE,
-                email TEXT NOT NULL UNIQUE,
-                password_hash TEXT NOT NULL,
-                created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-                updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
-            )
-        `);
+        
         
         // 创建用户表索引
-        await database.run('CREATE INDEX IF NOT EXISTS idx_users_email ON users(email)');
-        await database.run('CREATE INDEX IF NOT EXISTS idx_users_username ON users(username)');
-        console.log('✅ 用户表创建完成');
+        
+        
+        
         
         // 2. 创建测评表
         console.log('📋 创建测评表...');
@@ -57,47 +47,21 @@ async function runMigration() {
         console.log('✅ 题目表创建完成');
         
         // 4. 创建测评结果表
-        console.log('📋 创建测评结果表...');
-        await database.run(`
-            CREATE TABLE IF NOT EXISTS assessment_results (
-                id INTEGER PRIMARY KEY AUTOINCREMENT,
-                user_id INTEGER NOT NULL,
-                assessment_id INTEGER NOT NULL,
-                start_time TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-                end_time TIMESTAMP,
-                total_score INTEGER,
-                result_summary TEXT,
-                result_details TEXT,
-                FOREIGN KEY (user_id) REFERENCES users(id),
-                FOREIGN KEY (assessment_id) REFERENCES assessments(id)
-            )
-        `);
+        
         
         // 创建测评结果表索引
-        await database.run('CREATE INDEX IF NOT EXISTS idx_assessment_results_user ON assessment_results(user_id)');
-        await database.run('CREATE INDEX IF NOT EXISTS idx_assessment_results_assessment ON assessment_results(assessment_id)');
-        await database.run('CREATE INDEX IF NOT EXISTS idx_assessment_results_time ON assessment_results(start_time)');
-        console.log('✅ 测评结果表创建完成');
+        
+        
+        
+        
         
         // 5. 创建答案表
-        console.log('📋 创建答案表...');
-        await database.run(`
-            CREATE TABLE IF NOT EXISTS answers (
-                id INTEGER PRIMARY KEY AUTOINCREMENT,
-                result_id INTEGER NOT NULL,
-                question_id INTEGER NOT NULL,
-                answer_value TEXT NOT NULL,
-                score INTEGER,
-                answered_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-                FOREIGN KEY (result_id) REFERENCES assessment_results(id),
-                FOREIGN KEY (question_id) REFERENCES questions(id)
-            )
-        `);
+        
         
         // 创建答案表索引
-        await database.run('CREATE INDEX IF NOT EXISTS idx_answers_result ON answers(result_id)');
-        await database.run('CREATE INDEX IF NOT EXISTS idx_answers_question ON answers(question_id)');
-        console.log('✅ 答案表创建完成');
+        
+        
+        
         
         // 6. 创建系统配置表（可选）
         console.log('📋 创建系统配置表...');

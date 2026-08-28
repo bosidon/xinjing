@@ -8,6 +8,7 @@ const bcrypt = require('bcrypt');
 const cookieParser = require("cookie-parser");
 
 const { authenticateToken, extractToken } = require("/var/www/auth-verify");
+const AUTH_API = "http://localhost:3050";
 
 // 数据库模型
 const database = require('./database/db');
@@ -122,19 +123,9 @@ app.get('/api/health', async (req, res) => {
 // 获取当前用户信息
 app.get('/api/users/me', authenticateToken, async (req, res) => {
     try {
-        await database.connect();
-        const user = await database.get('SELECT id, username, email, role, created_at FROM users WHERE id = ?', [req.user.id]);
-        
-        if (!user) {
-            return res.status(404).json({
-                success: false,
-                error: '用户不存在'
-            });
-        }
-        
         res.json({
             success: true,
-            data: user
+            data: req.user
         });
         
     } catch (error) {
@@ -335,40 +326,28 @@ app.post('/api/assessments/:id/submit', authenticateToken, async (req, res) => {
             return res.status(404).json({ success: false, error: '测评不存在' });
         }
         
-        // 创建新结果记录并保存答案
+        // 创建新结果记录并保存答案（via auth API）
         let resultId;
-        await database.transaction(async (db) => {
-            const sr = await db.run(`
-                INSERT INTO assessment_results (user_id, assessment_id, start_time, total_score, result_summary)
-                VALUES (?, ?, datetime('now','localtime'), ?, ?)
-            `, [userId, assessmentId, answers.length * 10, '测评完成，分析中...']);
-            resultId = sr.lastID;
-            
-            for (const answer of answers) {
-                await db.run(`
-                    INSERT INTO answers (result_id, question_id, answer_value, answered_at)
-                    VALUES (?, ?, ?, datetime('now','localtime'))
-                `, [resultId, answer.questionId, answer.answerValue]);
-            }
+        const ansBody = answers.map(a => ({ questionId: a.questionId, answerValue: a.answerValue }));
+        const createResp = await fetch(AUTH_API + '/api/auth/psych/result', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json', 'Cookie': 'xianbao_token=' + extractToken(req) },
+            body: JSON.stringify({ assessment_id: assessmentId, total_score: answers.length * 10, result_summary: '测评完成，分析中...', answers: ansBody })
         });
+        const createData = await createResp.json();
+        if (!createData.success) throw new Error(createData.error || '创建结果失败');
+        resultId = createData.data.resultId;
         
         // 使用结果分析器进行深度分析
         let analysisData = null;
         try {
             const analysis = await ResultAnalyzer.analyzeResult(resultId, assessmentId);
             
-            await database.run(`
-                UPDATE assessment_results 
-                SET result_summary = ?,
-                    total_score = ?,
-                    result_details = ?
-                WHERE id = ?
-            `, [
-                analysis.summary,
-                analysis.score || answers.length * 10,
-                analysis.details,
-                resultId
-            ]);
+            await fetch(AUTH_API + '/api/auth/psych/result/' + resultId, {
+                method: 'PUT',
+                headers: { 'Content-Type': 'application/json', 'Cookie': 'xianbao_token=' + extractToken(req) },
+                body: JSON.stringify({ total_score: analysis.score || answers.length * 10, result_summary: analysis.summary, result_details: analysis.details })
+            });
             
             const detailsObj = JSON.parse(analysis.details);
             analysisData = buildAnalysisData(detailsObj, assessmentId);
@@ -416,44 +395,29 @@ app.post('/api/assessments/:id/submit', authenticateToken, async (req, res) => {
 // 获取用户测评历史
 app.get('/api/users/me/results', authenticateToken, async (req, res) => {
     try {
-        const userId = req.user.id;
-        
-        await database.connect();
-        
-        const results = await database.all(`
-            SELECT 
-                ar.id, ar.assessment_id, ar.start_time, ar.end_time, 
-                ar.total_score, ar.result_summary, ar.result_details,
-                a.name as assessment_name, a.category
-            FROM assessment_results ar
-            JOIN assessments a ON ar.assessment_id = a.id
-            WHERE ar.user_id = ? AND ar.result_summary IS NOT NULL
-            ORDER BY ar.start_time DESC
-        `, [userId]);
-        
-        res.json({
-            success: true,
-            data: results.map(result => {
-                let analysisData = null;
-                if (result.result_details) {
-                    try {
-                        const details = JSON.parse(result.result_details);
-                        analysisData = buildAnalysisData(details, result.assessment_id);
-                    } catch (e) {}
-                }
-                return {
-                    id: result.id,
-                    assessmentId: result.assessment_id,
-                    assessmentName: result.assessment_name,
-                    category: result.category,
-                    startTime: result.start_time ? new Date(result.start_time).toISOString() : null,
-                    endTime: result.end_time ? new Date(result.end_time).toISOString() : null,
-                    totalScore: result.total_score,
-                    resultSummary: result.result_summary,
-                    analysis: analysisData
-                };
-            })
+        const r = await fetch(AUTH_API + '/api/auth/psych/results', {
+            headers: { 'Cookie': 'xianbao_token=' + extractToken(req) }
         });
+        const d = await r.json();
+        if (!d.success) return res.json(d);
+        // Enrich with assessment info from local DB
+        await database.connect();
+        const enriched = [];
+        for (const row of d.data) {
+            const a = await database.get('SELECT name, category FROM assessments WHERE id = ?', [row.assessment_id]);
+            let analysisData = null;
+            if (row.result_details) {
+                try { analysisData = buildAnalysisData(JSON.parse(row.result_details), row.assessment_id); } catch(e) {}
+            }
+            enriched.push({
+                id: row.id, assessmentId: row.assessment_id,
+                assessmentName: a ? a.name : '', category: a ? a.category : '',
+                startTime: row.start_time ? new Date(row.start_time).toISOString() : null,
+                endTime: row.end_time ? new Date(row.end_time).toISOString() : null,
+                totalScore: row.total_score, resultSummary: row.result_summary, analysis: analysisData
+            });
+        }
+        res.json({ success: true, data: enriched });
         
     } catch (error) {
         console.error('获取测评历史失败:', error);
@@ -607,15 +571,11 @@ app.get('/api/users/:userId/results', authenticateToken, async (req, res) => {
         const currentUserId = req.user.id;
 
         // 检查权限：只能查看自己的记录，除非是管理员
-        if (targetUserId !== currentUserId) {
-            await database.connect();
-            const user = await database.get('SELECT role FROM users WHERE id = ?', [currentUserId]);
-            if (!user || user.role !== 'admin') {
-                return res.status(403).json({
-                    success: false,
-                    error: '无权查看其他用户的记录'
-                });
-            }
+        if (targetUserId !== currentUserId && req.user.role !== 'admin') {
+            return res.status(403).json({
+                success: false,
+                error: '无权查看其他用户的记录'
+            });
         }
 
         await database.connect();
