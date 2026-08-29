@@ -908,7 +908,7 @@ class PsychologicalAssessmentApp {
             '<h3 style="margin:0 0 12px;color:#a78bfa;">免费次数已用完</h3>' +
             '<p style="margin:0 0 20px;color:#888;font-size:14px;line-height:1.8;">' +
             '你的免费心理测评次数已用完。升级VIP后可无限使用<br>' +
-            '心理测评 · 塔罗解读 · 玛雅天赋 · 灵修阅读等全部功能。</p>' +
+            '心理测评 · 塔罗解读 · 玛雅天赋 · 心灵阅读等全部功能。</p>' +
             '<a href="' + (window.XB_MAIN || 'https://xianbao.online') + '/vip.html" target="_blank" ' +
             'style="display:inline-block;padding:12px 32px;background:linear-gradient(135deg,#a78bfa,#f472b6);' +
             'color:#fff;border-radius:8px;text-decoration:none;font-weight:600;font-size:15px;">' +
