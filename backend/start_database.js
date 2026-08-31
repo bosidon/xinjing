@@ -326,59 +326,82 @@ app.post('/api/assessments/:id/submit', authenticateToken, async (req, res) => {
             return res.status(404).json({ success: false, error: '测评不存在' });
         }
         
-        // 创建新结果记录并保存答案（via auth API）
-        let resultId;
+                // === 新流程：先分析，再一并提交到 auth ===
+        
+        // 1. 获取题目信息（assessments + questions 在本地 DB）
+        const assessmentRow = await database.get('SELECT * FROM assessments WHERE id = ?', [assessmentId]);
+        if (!assessmentRow) throw new Error('测评不存在');
+        
+        const questionIds = answers.map(a => a.questionId);
+        const placeholders = questionIds.map(() => '?').join(',');
+        const questions = await database.all(
+            `SELECT * FROM questions WHERE id IN (${placeholders})`,
+            questionIds
+        );
+        const qMap = {};
+        questions.forEach(q => qMap[q.id] = q);
+        const answersWithQuestions = answers.map(a => ({
+            question_text: qMap[a.questionId]?.question_text || '',
+            question_type: qMap[a.questionId]?.question_type || '',
+            options: qMap[a.questionId]?.options || '',
+            order_index: qMap[a.questionId]?.order_index || 0,
+            weight: qMap[a.questionId]?.weight || 1,
+            answer_value: a.answerValue,
+            score: null
+        }));
+        
+        // 2. 直接调用分析函数（不读数据库）
+        let analysisData = null;
+        let analysisResult = null;
+        try {
+            const methodMap = { 1:'MBTI', 2:'PHQ9', 3:'Holland', 4:'SAS', 5:'GAD7', 6:'BigFive', 7:'EQ', 8:'Abundance', 9:'SelfLove', 10:'SAD', 11:'ITS', 12:'IRI', 13:'SSI', 14:'SIAS', 15:'SDS', 16:'ParentChild', 17:'Marriage', 18:'Sexuality' };
+            const methodName = methodMap[assessmentId] || 'Generic';
+            const analyzerMethod = ResultAnalyzer['analyze' + methodName];
+            
+            if (analyzerMethod) {
+                const fakeResult = { total_score: answers.length * 10, assessment_id: assessmentId };
+                analysisResult = await analyzerMethod.call(ResultAnalyzer, fakeResult, assessmentRow, answersWithQuestions);
+                const detailsObj = JSON.parse(analysisResult.details);
+                analysisData = buildAnalysisData(detailsObj, assessmentId);
+                console.log('深度分析完成:', analysisResult.analysisType);
+            }
+        } catch (analysisError) {
+            console.error('深度分析失败:', analysisError.message);
+        }
+        
+        // 3. 一并提交到 auth（答案 + 分析结果）
+        const totalScore = analysisResult?.score || answers.length * 10;
+        const resultSummary = analysisResult?.summary || '测评完成';
+        const resultDetails = analysisResult?.details || null;
+        
         const ansBody = answers.map(a => ({ questionId: a.questionId, answerValue: a.answerValue }));
         const createResp = await fetch(AUTH_API + '/api/auth/psych/result', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json', 'Cookie': 'xianbao_token=' + extractToken(req) },
-            body: JSON.stringify({ assessment_id: assessmentId, total_score: answers.length * 10, result_summary: '测评完成，分析中...', answers: ansBody })
+            body: JSON.stringify({
+                assessment_id: assessmentId,
+                total_score: totalScore,
+                result_summary: resultSummary,
+                result_details: resultDetails,
+                answers: ansBody
+            })
         });
         const createData = await createResp.json();
         if (!createData.success) throw new Error(createData.error || '创建结果失败');
-        resultId = createData.data.resultId;
+        const resultId = createData.data.resultId;
         
-        // 使用结果分析器进行深度分析
-        let analysisData = null;
-        try {
-            const analysis = await ResultAnalyzer.analyzeResult(resultId, assessmentId);
-            
-            await fetch(AUTH_API + '/api/auth/psych/result/' + resultId, {
-                method: 'PUT',
-                headers: { 'Content-Type': 'application/json', 'Cookie': 'xianbao_token=' + extractToken(req) },
-                body: JSON.stringify({ total_score: analysis.score || answers.length * 10, result_summary: analysis.summary, result_details: analysis.details })
-            });
-            
-            const detailsObj = JSON.parse(analysis.details);
-            analysisData = buildAnalysisData(detailsObj, assessmentId);
-            
-            console.log('深度分析完成:', analysis.analysisType);
-        } catch (analysisError) {
-            console.error('深度分析失败（使用基本结果）:', analysisError.message);
-        }
-        
-        // 获取保存后的结果（via auth API）
-        let savedResult = { id: resultId, assessment_id: assessmentId, start_time: null, end_time: null, total_score: 0, result_summary: '', assessment_name: '' };
-        try {
-            const fetchResp = await fetch(AUTH_API + '/api/auth/psych/result/' + resultId, {
-                headers: { 'Cookie': 'xianbao_token=' + extractToken(req) }
-            });
-            const fetchData = await fetchResp.json();
-            if (fetchData.success && fetchData.data) {
-                const a = await database.get('SELECT name FROM assessments WHERE id = ?', [assessmentId]);
-                savedResult = {
-                    id: fetchData.data.id,
-                    assessment_id: fetchData.data.assessment_id,
-                    start_time: fetchData.data.start_time,
-                    end_time: fetchData.data.end_time,
-                    total_score: fetchData.data.total_score,
-                    result_summary: fetchData.data.result_summary,
-                    assessment_name: a ? a.name : ''
-                };
-            }
-        } catch (e) { console.error('获取结果失败:', e.message); }
-        
-        res.json({
+        // 4. 构建返回数据
+        const savedResult = {
+            id: resultId,
+            assessment_id: assessmentId,
+            start_time: new Date().toISOString(),
+            end_time: null,
+            total_score: totalScore,
+            result_summary: resultSummary,
+            assessment_name: assessmentRow.name || ''
+        };
+
+res.json({
             success: true,
             data: {
                 id: savedResult.id,
