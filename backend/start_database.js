@@ -8,7 +8,7 @@ const bcrypt = require('bcrypt');
 const cookieParser = require("cookie-parser");
 
 const { authenticateToken, extractToken } = require("/var/www/auth-verify");
-const AUTH_API = "http://localhost:3050";
+const AUTH_API = process.env.AUTH_API || "http://localhost:3050";
 
 // 数据库模型
 const database = require('./database/db');
@@ -231,7 +231,7 @@ app.post('/api/assessments/:id/start', authenticateToken, async (req, res) => {
         const tokenForUsage = extractToken(req);
         if (tokenForUsage) {
             try {
-                const checkResp = await fetch('http://localhost:3050/api/usage/check?service=psych_test', {
+                const checkResp = await fetch(`${AUTH_API}/api/usage/check?service=psych_test`, {
                     headers: { 'Cookie': `xianbao_token=${tokenForUsage}` }
                 });
                 const usageData = await checkResp.json();
@@ -298,7 +298,7 @@ app.post('/api/assessments/:id/submit', authenticateToken, async (req, res) => {
         const tokenForInc = extractToken(req);
         if (tokenForInc) {
             try {
-                const resp = await fetch('http://localhost:3050/api/usage/increment', {
+                const resp = await fetch(`${AUTH_API}/api/usage/increment`, {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json',
@@ -456,7 +456,7 @@ const requireAdmin = async (req, res, next) => {
 // 获取用户列表（从统一认证中心）
 app.get('/api/admin/users', authenticateToken, requireAdmin, async (req, res) => {
     try {
-        const resp = await fetch('http://localhost:3050/api/users/', {
+        const resp = await fetch(`${AUTH_API}/api/users/`, {
             headers: { 'Cookie': req.headers['cookie'] || '' }
         });
         const data = resp.data;

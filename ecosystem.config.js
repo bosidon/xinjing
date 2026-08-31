@@ -3,10 +3,12 @@ module.exports = {
     name: 'psych-test',
     script: './backend/start_database.js',
     cwd: '/var/www/psych-test',
+    env_file: '/var/www/.env',
     env: {
       NODE_ENV: 'production',
       PORT: 3003,
-      ALLOWED_ORIGINS: 'https://ceping.xianbao.online',
+      AUTH_API: 'https://auth.xianbao.love',
+      ALLOWED_ORIGINS: 'https://xianbao.love',
     },
     log_date_format: 'YYYY-MM-DD HH:mm:ss',
     error_file: './logs/pm2-error.log',
