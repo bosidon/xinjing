@@ -1805,7 +1805,7 @@ class PsychologicalAssessmentApp {
             // 收集筛选参数
             const userId = document.getElementById('filterUserId')?.value || '';
             const assessmentId = document.getElementById('filterAssessmentId')?.value || '';
-            const startDate = document.getElementById('filterStartDate')?.value || '';
+            const startDate = document.getElementById('filterStartDate')?.value || (() => { const d = new Date(); d.setDate(d.getDate() - 10); return d.toISOString().split('T')[0]; })();
             const endDate = document.getElementById('filterEndDate')?.value || '';
             
             let url = `${this.apiBaseUrl}/admin/records?page=1&limit=50`;
