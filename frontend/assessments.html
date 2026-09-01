@@ -416,7 +416,23 @@
 <link rel=apple-touch-icon sizes=180x180 href=/assets/xianbao/apple-touch-icon.png>
 <link rel="stylesheet" href="/assets/xianbao/xianbao-topbar.css">
 
-</head>
+<style>
+@media print{
+  @page{ margin:0; }
+  body{background:#fff!important;color:#222!important;padding:15mm 12mm!important}
+  #xianbao-topbar,.xianbao-topbar,#assessments,#assessmentDetail,#testPage,.result-actions,#backToList,#startTest{display:none!important}
+  #resultPage{display:block!important;padding:0!important}
+  #resultPage .container{max-width:100%;padding:0!important}
+  .result-card,.score-details,.result-content{background:#fff!important;color:#222!important;border-color:#ddd!important;box-shadow:none!important}
+  .score-circle{background:#f5f5f5!important;color:#222!important;border-color:#ddd!important}
+  h1,h2,h3,h4,h5,.result-header p,.score-details p,.result-card p,label,span,small{color:#222!important}
+  .result-header{background:none!important;border:none!important}
+  a{color:#222!important;text-decoration:none}
+  .btn{color:#222!important;background:#f5f5f5!important;border-color:#ddd!important}
+  .progress-bar,.progress-track{background:#eee!important}
+  .footer{background:#fff!important;color:#999!important;border-top:1px solid #ddd!important}
+}
+</style></head>
 <body class="layout-list">
 <div id="xianbao-topbar" data-active="ceping"></div>
 

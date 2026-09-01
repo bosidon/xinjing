@@ -2011,24 +2011,11 @@ class PsychologicalAssessmentApp {
 
     // =========================================================
     // 下载PDF报告
-    async downloadPDF() {
-        const btn = document.getElementById('downloadPdf');
-        if (btn) { btn.disabled = true; btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> 生成中...'; }
-        try {
-            const resultContent = document.querySelector('#resultPage .result-content');
-            if (!resultContent) { this.showMessage('无结果内容', 'error'); return; }
-            const name = this.currentAssessment ? this.currentAssessment.name : '心理测评';
-            const username = (this.currentUser && this.currentUser.username) ? this.currentUser.username : '未登录';
-            const now = new Date();
-            const dateStr = now.getFullYear() + '-' + String(now.getMonth() + 1).padStart(2, '0') + '-' + String(now.getDate()).padStart(2, '0');
-            await XD.multiPDF(resultContent, { name: name + '_' + username + '_' + dateStr });
-            this.showMessage('PDF下载成功', 'success');
-        } catch (error) {
-            console.error('PDF生成失败:', error);
-            this.showMessage('PDF生成失败，请重试', 'error');
-        } finally {
-            if (btn) { btn.disabled = false; btn.innerHTML = '<i class="fas fa-download"></i> 下载PDF'; }
-        }
+    downloadPDF() {
+        const name = this.currentAssessment ? this.currentAssessment.name : '心理测评';
+        const username = (this.currentUser && this.currentUser.username) ? this.currentUser.username : '';
+        document.title = (name + '_结果_' + username);
+        window.print();
     }
 
     // 显示消息
